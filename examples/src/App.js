@@ -5,58 +5,40 @@ const s = {
   wrapper: {
     display: 'flex',
     height: '100%',
-  },
-  leftColumn: {
-    flexBasis: '200px',
-    backgroundColor: '#EAEAEA',
-
-  },
-  rightColumn: {
-    display: 'flex',
+    width: '100%',
     alignItems: 'center',
-    flexBasis: '1000px',
-    position: 'relative',
-    flexGrow: 1,
-    backgroundColor: '#D9DBFF',
-    fontSize: '30px',
-    textAlign: 'center',
+    justifyContent: 'center',
   },
-  toggleLeftColumnBtn: {
-    alignSelf: 'baseline',
-    fontSize: '14px',
-  },
-  text: {
-    flexGrow: 1,
+  target: {
+    width: 1,
+    height: 1,
+    background: 'skyblue',
   },
 };
 
 class App extends Component {
   state = {
-    leftPanel: true,
-    count: 0,
+    scale: 1,
   };
 
-  onResize = () =>
-    this.setState({ count: this.state.count + 1 });
+  componentDidMount() {
+    window.onresize = this.onResize;
+  }
 
-  hideLeftPanel = () =>
-    this.setState({ leftPanel: !this.state.leftPanel });
+  onResize = () => {
+    const PADDING = 60;
+    const bodyWidth = document.body.offsetWidth;
+    const bodyHeight = document.body.offsetHeight;
+    const scale = (bodyWidth > bodyHeight ? bodyHeight : bodyWidth) - (2 * PADDING);
+
+    this.setState({ scale });
+  };
 
   render() {
     return (
       <div style={s.wrapper}>
-        {this.state.leftPanel && <div style={s.leftColumn} />}
-        <div style={s.rightColumn}>
-          <div style={s.toggleLeftColumnBtn}>
-            <button onClick={this.hideLeftPanel}>Toggle left panel</button>
-            <br />or resize window
-          </div>
-
-          <div style={s.text}>Main div resized {this.state.count} times</div>
-
-          <ResizeDetector handleWidth handleHeight onResize={this.onResize} />
-        </div>
-
+        <div style={{ transform: `scale(${this.state.scale})`, ...s.target }} />
+        <ResizeDetector handleWidth handleHeight onResize={this.onResize} />
       </div>
     );
   }
