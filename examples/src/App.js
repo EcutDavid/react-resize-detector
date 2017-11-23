@@ -22,7 +22,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    window.onresize = this.onResize;
+    // window.onresize = this.onResize;
   }
 
   onResize = () => {
